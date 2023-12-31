@@ -17,19 +17,28 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration:create": "npm run typeorm:cli -- migration:create ./src/infra/database/migrations/$npm_config_name",
+    "migration:run": "npm run typeorm:cli -- migration:run -d ./datasource-typeorm.ts",
+    "migration:revert": "npm run typeorm:cli -- migration:revert -d ./datasource-typeorm.ts",
+    "entity:create": "npm run typeorm:cli -- entity:create ./src/infra/database/entities/$npm_config_name && node src/update-index.js --name=$npm_config_name"
   },
   "dependencies": {
+    "@golevelup/nestjs-rabbitmq": "^4.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/typeorm": "^10.0.1",
     "bip32": "^3.0.1",
     "bip39": "^3.0.4",
     "bitcoinjs-lib": "^6.0.1",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "tiny-secp256k1": "^2.2.1",
+    "typeorm": "^0.3.17",
     "zeromq": "^5.2.8"
   },
   "devDependencies": {
@@ -56,20 +65,46 @@
     "typescript": "^4.7.4"
   },
   "jest": {
+    "setupFiles": [
+      "<rootDir>/test/.jest/setEnvVars.ts"
+    ],
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "roots": [
+      "<rootDir>/test"
+    ],
+    "testRegex": [
+      ".*\\.spec\\.ts$"
+    ],
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "coverageThreshold": {
+      "global": {
+        "statements": 80
+      }
+    },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "<rootDir>/src/",
+      "**/*.(t|j)s",
+      "!**/protocols/**",
+      "!**/*.module.(t|j)s",
+      "!**/migrations/**",
+      "!**/entities/**",
+      "!**/main.ts",
+      "!**/index.ts",
+      "!**/*.config.ts",
+      "!**/test/utils/mocks/**.(t|j)s",
+      "!**/*.e2e-spec.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "<rootDir>/coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "@/test/(.*)": "<rootDir>/test/$1",
+      "@/(.*)": "<rootDir>/src/$1"
+    }
   }
 }

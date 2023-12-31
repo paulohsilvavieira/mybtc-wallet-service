@@ -1,5 +1,5 @@
 import { Asset } from '@/core/domain/entities/wallet';
-import { CreateWalletBitcoin } from '@/core/domain/protocols/usecases';
+import { CreateWalletBitcoin } from '@/core/domain/protocols/usecases/bitcoin';
 import { GetWallet } from '@/core/domain/protocols/usecases/get-wallet';
 import {
   Body,
