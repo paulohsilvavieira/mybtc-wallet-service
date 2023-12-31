@@ -1,10 +1,10 @@
 export type Wallet = {
+  id: string;
   userId: string;
+  derivation: number;
   secret: string;
   address: string;
   asset: Asset;
-  derivation: number;
-  id: string;
 };
 
 export enum Asset {
