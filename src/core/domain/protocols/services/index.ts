@@ -1,1 +1,1 @@
-export * from './bitcoin-service';
+export * from './bitcoin/bitcoin-service';
