@@ -1,9 +1,9 @@
-import { BitcoinServiceProtocol } from '@/core/domain/protocols/services/bitcoin-service';
 import { mnemonicToSeedSync } from 'bip39';
 import * as ecc from 'tiny-secp256k1';
 import bip32 from 'bip32';
 import { networks, payments } from 'bitcoinjs-lib';
 import { Injectable } from '@nestjs/common';
+import { BitcoinServiceProtocol } from '@/core/domain/protocols/services';
 
 @Injectable()
 export class BitcoinService implements BitcoinServiceProtocol {
